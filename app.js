@@ -1,7 +1,10 @@
 const Koa = require('koa')
-const bodyParser = require('koa-bodyparser')
+const koaBody = require('koa-body')
 const mongoose = require('mongoose')
 const Users = require('./routers/Users')
+const Home = require('./routers/Home')
+const path = require('path')
+const koaStatic = require('koa-static')
 
 
 const app = new Koa()
@@ -20,9 +23,19 @@ db.on('open', () => {
     console.log('数据库连接成功!')
 })
 
-app.use(bodyParser())
+
+app.use(koaStatic(path.join(__dirname, 'public')))
+app.use(koaBody({
+    multipart: true,
+    formidable: {
+        uploadDir: path.join(__dirname, '/public/uploads'),
+        keepExtensions: true
+    }
+}))
 app.use(Users.routes())
 app.use(Users.allowedMethods())
+app.use(Home.routes())
+app.use(Home.allowedMethods())
 
 app.listen(port, async () => {
     console.log(`Project running in ${port} port`)

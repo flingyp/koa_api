@@ -14,9 +14,11 @@
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.12.1",
+    "koa-body": "^4.2.0",
     "koa-bodyparser": "^4.3.0",
     "koa-jwt": "^4.0.0",
     "koa-router": "^9.0.1",
+    "koa-static": "^5.0.0",
     "mongoose": "^5.9.18"
   }
 }
