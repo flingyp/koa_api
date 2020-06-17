@@ -18,6 +18,10 @@ class users {
     }
     
     async userregister (ctx){
+        ctx.verifyParams({
+            username: { type: 'string', required: true },
+            password: {type: 'string', required: true }
+        })
         const findResult = await user.findOne({username: ctx.request.body.username})
         if(findResult) {
             ctx.throw(409, 'The user already exists')
@@ -41,6 +45,10 @@ class users {
     }
 
     async userlogin (ctx) {
+        ctx.verifyParams({
+            username: { type: 'string', required: true },
+            password: {type: 'string', required: true }
+        })
         // 获取 用户登陆时输入的用户名 和 密码
         let {username, password} = ctx.request.body
         let findResult = await user.findOne({username}).select('+password')
@@ -78,7 +86,26 @@ class users {
         }
     }
 
+    async getuser(ctx) {
+        const { fields } = ctx.query
+        const selectFields = fields.split(';').filter(f => f).map(f => ' +' + f).join('')
+        const getUser = await user.findById(ctx.params.id).select(selectFields);
+        if(!getUser) {ctx.throw(404, '用户不存在')}
+        ctx.body = getUser
+    }
+
     async userupdate(ctx) {
+        ctx.verifyParams({
+            username: { type: 'string', required: false },
+            password: { type: 'string', required: false },
+            avatar_url: { type: 'string', required: false },
+            gender: { type: 'string', required: false },
+            headline: { type: 'string', required: false },
+            locations: { type: 'array', itemType: 'string', required: false },
+            business: { type: 'string', required: false },
+            employments: { type: 'array', itemType: 'object' ,required: false },
+            educations: { type: 'array', itemType: 'object' ,required: false },
+        })
         let hash = null
         let updateUser = null
         if(ctx.request.body.password) {

@@ -1,6 +1,6 @@
 const Router = require('koa-router')
 // 接口函数
-const {allusers,userstest, userregister, userlogin, userupdate, userdelete}  = require('../controllers/users')
+const {allusers,userstest, userregister, userlogin, userupdate, userdelete, getuser}  = require('../controllers/users')
 const koaJwt = require('koa-jwt')
 const {secret} = require('../config/secret')
 
@@ -10,7 +10,7 @@ const router = new Router({prefix: '/user'})
 const auth = koaJwt({ secret })
 // 用户验证  当 token验证后 检测调用敏感接口 （例如 更新用户信息 删除用户） 是不是自己。 防止他人携带token后修改信息
 const checkOwner = async (ctx, next) => {
-    if (ctx.params.id !== ctx.state.user._id) {
+    if (ctx.params.id !== ctx.state.user.id) {
       ctx.throw(403, '该用户没有此权限')
     }
     await next()
@@ -35,6 +35,12 @@ router.post('/register', userregister)
  * 用户登录接口
  */
 router.post('/login', userlogin)
+
+/**
+ * 查询特定用户接口
+ * 查询地址： http://localhost:3000/user/getuser/特定用户id?fields=xxx;xxx(想要查询的字段)
+ */
+router.get('/getuser/:id', getuser)
 
 /**
  * 更新用户接口

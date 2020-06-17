@@ -5,11 +5,15 @@ const Users = require('./routers/Users')
 const Home = require('./routers/Home')
 const path = require('path')
 const koaStatic = require('koa-static')
+const parameter = require('koa-parameter');
 
 
 const app = new Koa()
 const port = 3000
 const db = mongoose.connection
+
+// 参数校验 koa-parameter
+parameter(app);
 
 // 连接数据库
 mongoose.connect('mongodb://localhost/demo01', { 
