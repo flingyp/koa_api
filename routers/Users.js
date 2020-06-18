@@ -1,6 +1,6 @@
 const Router = require('koa-router')
 // 接口函数
-const {allusers,userstest, userregister, userlogin, userupdate, userdelete, getuser}  = require('../controllers/users')
+const {allusers,userstest, userregister, userlogin, userupdate, userdelete, getuser, listFollowing, follow, listFollowers, unfollow}  = require('../controllers/users')
 const koaJwt = require('koa-jwt')
 const {secret} = require('../config/secret')
 
@@ -52,5 +52,24 @@ router.put('/update/:id', auth,checkOwner, userupdate)
  */
 router.delete('/delete/:id', auth, checkOwner,userdelete)
 
+/**
+ * 获取用户关注 接口
+ */
+router.get('/:id/following', listFollowing)
+
+/**
+ * 实现用户关注 接口
+ */
+router.put('/following/:id', auth, follow)
+
+/**
+ * 获取粉丝列表 
+ */
+router.get('/:id/listFollowers', listFollowers)
+
+/**
+ * 取消关注接口
+ */
+router.delete('/following/:id', auth, unfollow) 
 
 module.exports = router

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 
 const userSchema = mongoose.Schema({
@@ -31,7 +32,7 @@ const userSchema = mongoose.Schema({
         }],
         select: false
       },
-      educations: {   // 教育简历 
+    educations: {   // 教育简历 
           type: [{
               scholls: {type: String},  // 学校
               major: {type: String},    // 专业
@@ -40,7 +41,11 @@ const userSchema = mongoose.Schema({
               graduation_year: {type: Number}  // 毕业年份
           }],
           select: false
-      }
+    },
+    following: {
+        type: [{ type: Schema.Types.ObjectId , ref:'user' }],
+        // select: false,
+    }
 })
 
 module.exports = mongoose.model('user', userSchema)

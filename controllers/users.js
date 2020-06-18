@@ -137,6 +137,39 @@ class users {
             }
         }
     }
+
+    async listFollowing(ctx) {
+        const followUser = await user.findById(ctx.params.id).select("+following").populate("following")
+        if(!user) {ctx.throw(404)}
+        ctx.body = followUser.following
+    }
+
+    async follow(ctx) {
+        const me = await user.findById(ctx.state.user.id).select("+following")
+        if(!me.following.map(id => id.toString()).includes(ctx.params.id)) {
+            me.following.push(ctx.params.id)
+            me.save()
+        }
+        ctx.status = 204
+    }
+
+    async listFollowers(ctx) {
+        // 查询数据库中following 包含 这个用户tx.params.id 的数据
+        const users = await user.find({following: ctx.params.id})
+        ctx.body = users
+    }
+
+    async unfollow(ctx) {
+        // 首页要知道是谁在请求这个接口 通过 ctx.state.user._id 获取 请求这个接口用户的 id
+        const me = await user.findById(ctx.state.user.id).select('+following')
+        // 获取 index 
+        const index = me.following.map(id => id.toString()).indexOf(ctx.params.id)
+        if(index>-1) {
+            me.following.splice(index, 1)
+            me.save()
+        }
+        ctx.status = 204
+    }
 }
 
 module.exports = new users()
