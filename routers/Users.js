@@ -3,6 +3,7 @@ const Router = require('koa-router')
 const {allusers,userstest, userregister, userlogin, userupdate, userdelete, getuser, listFollowing, follow, listFollowers, unfollow}  = require('../controllers/users')
 const koaJwt = require('koa-jwt')
 const {secret} = require('../config/secret')
+const user = require('../models/user')
 
 const router = new Router({prefix: '/user'})
 
@@ -14,6 +15,12 @@ const checkOwner = async (ctx, next) => {
       ctx.throw(403, '该用户没有此权限')
     }
     await next()
+}
+// 检查用户是否存在
+const checkUserExist = async (ctx, next) => {
+  const isUser = await user.findById(ctx.params.id)
+  if(!isUser) {ctx.throw(404, '用户不存在')}
+  await next()
 }
 
 /** 
@@ -60,7 +67,7 @@ router.get('/:id/following', listFollowing)
 /**
  * 实现用户关注 接口
  */
-router.put('/following/:id', auth, follow)
+router.put('/following/:id', auth, checkUserExist, follow)
 
 /**
  * 获取粉丝列表 
@@ -70,6 +77,6 @@ router.get('/:id/listFollowers', listFollowers)
 /**
  * 取消关注接口
  */
-router.delete('/following/:id', auth, unfollow) 
+router.delete('/following/:id', auth, checkUserExist, unfollow) 
 
 module.exports = router

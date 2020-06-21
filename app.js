@@ -3,6 +3,7 @@ const koaBody = require('koa-body')
 const mongoose = require('mongoose')
 const Users = require('./routers/Users')
 const Home = require('./routers/Home')
+const Topic = require('./routers/Topic')
 const path = require('path')
 const koaStatic = require('koa-static')
 const parameter = require('koa-parameter');
@@ -40,6 +41,7 @@ app.use(Users.routes())
 app.use(Users.allowedMethods())
 app.use(Home.routes())
 app.use(Home.allowedMethods())
+app.use(Topic.routes())
 
 app.listen(port, async () => {
     console.log(`Project running in ${port} port`)
