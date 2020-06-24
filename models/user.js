@@ -20,22 +20,22 @@ const userSchema = mongoose.Schema({
     headline: {type: String},  // 一句话介绍
     locations: {    // 居住地
         type: [{
-            type: String
+            type: Schema.Types.ObjectId , ref:'Topic'
         }],
         select: false
     },
-    business: {type: String, select: false}, // 所在行业
+    business: {type: Schema.Types.ObjectId , ref:'Topic', select: false}, // 所在行业
     employments: { 
         type: [{         // 职业经历  （公司 和 职位）
-            company: {type: String}, // 公司
+            company: {type: Schema.Types.ObjectId , ref:'Topic'}, // 公司
             job: {type: String}  // 职位
         }],
         select: false
       },
     educations: {   // 教育简历 
           type: [{
-              scholls: {type: String},  // 学校
-              major: {type: String},    // 专业
+              scholls: {type: Schema.Types.ObjectId , ref:'Topic'},  // 学校
+              major: {type: Schema.Types.ObjectId , ref:'Topic'},    // 专业
               diploma: {type: Number, enum: [1,2,3,4,5]},  // 学历
               entrance_year: {type: Number},   // 入学年份
               graduation_year: {type: Number}  // 毕业年份

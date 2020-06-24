@@ -30,6 +30,7 @@ router.get('/test', userstest)
 
 /**
  * 显示用户列表接口
+ * 参数： per_page 一页多少条数据  page 获取第几页的数据
  */
 router.get('/allusers', allusers)
 

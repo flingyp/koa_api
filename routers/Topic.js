@@ -31,6 +31,7 @@ router.get('/test', topictest)
 
 /**
  * 获取话题接口
+ * 参数： per_page 一页多少条数据  page 获取第几页的数据
  */
 router.get('/', find)
 

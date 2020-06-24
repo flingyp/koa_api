@@ -14,7 +14,10 @@ class users {
     }
 
     async allusers(ctx) {
-        ctx.body = await user.find()
+        const {per_page = 10} = ctx.query
+        const page = Math.max(ctx.query.page*1, 1) - 1
+        const perPage = Math.max(per_page*1, 1)
+        ctx.body = await user.find().limit(perPage).skip(page * perPage)
     }
     
     async userregister (ctx){
@@ -89,7 +92,8 @@ class users {
     async getuser(ctx) {
         const { fields } = ctx.query
         const selectFields = fields.split(';').filter(f => f).map(f => ' +' + f).join('')
-        const getUser = await user.findById(ctx.params.id).select(selectFields);
+        const getUser = await user.findById(ctx.params.id).select(selectFields)
+            .populate('following locations business employments.company employments.job educations.school educations.major');
         if(!getUser) {ctx.throw(404, '用户不存在')}
         ctx.body = getUser
     }
